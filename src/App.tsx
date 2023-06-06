@@ -1,26 +1,25 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Contacts from './pages/Contacts';
+import ChartsAndMaps from './pages/ChartsAndMaps';
+import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
+import ContactForm from './components/ContactForm';
+import EditContactDetails from './components/EditContactDetails';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Sidebar />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Contacts />} />
+        <Route path="/charts-and-maps" element={<ChartsAndMaps />} />
+        <Route path="/add-contact" element={<ContactForm />} />
+        <Route path="/edit-contact/:id" element={<EditContactDetails />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
