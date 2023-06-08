@@ -1,30 +1,44 @@
-import React, { useEffect } from "react";
-import { BsFillBox2HeartFill } from "react-icons/bs";
-import { GrClose } from "react-icons/gr";
+import React, { useEffect, useState } from "react";
+import { TiContacts } from "react-icons/ti";
+import { BiBarChartSquare } from 'react-icons/bi'
+import { TbLayoutDashboard } from 'react-icons/tb'
+import { BsCode } from 'react-icons/bs'
+import { AiOutlineClose } from "react-icons/ai";
 import { RxHamburgerMenu } from 'react-icons/rx';
 
 import { BiHomeSmile } from "react-icons/bi";
 import {
-    MdCategory,
     MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
-import Button from "../globalComponent/Button";
 import { useNavigate } from 'react-router-dom';
 
 const sidebarItems = [
     {
         name: "Dashboard",
-        icon: <BiHomeSmile />,
+        icon: <TbLayoutDashboard
+            style={{ width: '2rem', height: '2rem' }}
+        />,
+        link: "/",
+    },
+    {
+        name: "Home",
+        icon: <BiHomeSmile
+            style={{ width: '2rem', height: '2rem' }}
+        />,
         link: "/",
     },
     {
         name: "Contacts",
-        icon: <BsFillBox2HeartFill />,
+        icon: <TiContacts
+            style={{ width: '2rem', height: '2rem' }}
+        />,
         link: "/",
     },
     {
         name: "Charts & Maps",
-        icon: <MdCategory />,
+        icon: <BiBarChartSquare
+            style={{ width: '2rem', height: '2rem' }}
+        />,
         link: "/charts-and-maps",
     },
 ];
@@ -38,8 +52,8 @@ const Sidebar = () => {
     });
 
     const [isHoverActive, setIsHoverActive] = React.useState(false);
-
-    const [isHamBurgerActive, setIsHamBurgerActive] = React.useState(false);
+    const [isSidebarActive, setIsSidebarActive] = useState(true);
+    const [isHamBurgerActive, setIsHamBurgerActive] = React.useState(true);
 
     const handleIsHoverActive = () => {
         localStorage.setItem("isHoverActive", JSON.stringify(!isHoverActive));
@@ -51,39 +65,20 @@ const Sidebar = () => {
         setIsHoverActive(isHoverActive === "true" ? true : false);
     }, []);
 
-    const HoverBtnComp = () => {
-        return (
-            <div>
-                <Button
-                    aria-label="Toggle Sidebar"
-                    onClick={handleIsHoverActive}
-                    className={`absolute -right-5 top-3 z-[11] w-fit rounded-md bg-white p-2  dark:bg-[#1F2937]`}
-                >
-                    <MdKeyboardDoubleArrowRight
-                        style={{ color: `${isHoverActive ? 'white' : 'gray'}` }}
-                        className={`transform text-2xl text-gray-700 transition-all duration-300 group-hover:rotate-[-180deg] dark:text-gray-400 dark:hover:text-gray-300 ${isHoverActive
-                            ? "rotate-[360deg] drop-shadow-2xl "
-                            : "rotate-[-180deg]"
-                            }`}
-                    />
-                </Button>
-            </div>
-        )
-    }
-
     const SidebarInnerContentComp = () => {
         return (
             <>
                 {sidebarItems.map((item) => (
                     <div
-                        onClick={() => navigate(item.link)}
+                        className={`w-full h-16 flex items-center justify-center md:justify-start md:pl-4 mb-1 gap-5 text-gray-400 hover:text-white hover:bg-[#111827]`}
+                        onClick={() => { navigate(item.link); }}
                         key={item.name}
-                        className={`mx-2 flex items-center gap-5 rounded-md p-3 text-gray-400 hover:dark:text-gray-500`}
                     >
-                        <span className="text-2xl">{item.icon}</span>
                         <span
-                            className={`truncate ${isHoverActive ? "hidden group-hover:block" : ""
-                                } `}
+                            className={``}
+                        >{item.icon}</span>
+                        <span
+                            className={`truncate hidden ${isHoverActive ? 'group-hover:block' : ''}`}
                         >
                             {item.name}
                         </span>
@@ -95,41 +90,70 @@ const Sidebar = () => {
 
     return screenWidth > 425 ? (
         <div
-            className={`group h-screen cursor-pointer fixed top-0 z-50 flex-col gap-4  py-10 transition-all duration-300 dark:bg-[#0e1421] md:flex ${isHoverActive ? "w-16 hover:w-64" : "w-64"
-                }`}
+            className={`group h-screen fixed z-50 flex justify-between items-center ${isSidebarActive ? '' : '-translate-x-full'} transition duration-300 ${isSidebarActive && isHoverActive ? 'w-16 hover:w-64' : 'w-16'} transition-all duration-1000 text-white bg-[#1F2937] cursor-pointer`}
         >
-            <HoverBtnComp />
-            <SidebarInnerContentComp />
+            <div
+                className={`relative h-screen w-full pt-20`}
+            >
+                <div
+                    className={``}
+                >
+                    <SidebarInnerContentComp />
+                </div>
+                <div
+                    onClick={() => setIsHoverActive((prev) => !(prev))}
+                    className={`absolute top-5 -right-[1rem] bg-[#374151] hover:bg-[#303947] rounded-md ${isHoverActive ? 'text-white' : 'text-gray-500'}`}
+                >
+                    <BsCode
+                        style={{ width: '2rem', height: '2rem' }}
+                    />
+                </div>
+                <div
+                    className={`flex items-center justify-center absolute -right-7 h-8 top-1/2 transform -translate-y-1/2 w-7 rounded-r-3xl bg-[#374151] hover:bg-[#303947] ${isSidebarActive ? 'text-white' : 'text-gray-500'}`}
+                    onClick={() => setIsSidebarActive((prev) => !prev)}
+                >
+                    <MdKeyboardDoubleArrowRight
+                        style={{ width: '2rem', height: '2rem' }}
+                        className={``}
+                    />
+                </div>
+            </div>
         </div>
     ) : (
-        <div
-            className="fixed z-50"
-        >
-            <RxHamburgerMenu
-                onClick={() => setIsHamBurgerActive((prev) => !prev)}
-                style={{ height: '35px', width: '35px', borderRadius: '5px', backgroundColor: '#374151', color: 'white', padding: '5px' }}
-                className="absolute top-5 left-5 z-50"
-            />
-            {
-                isHamBurgerActive && (
+        <>
+            <div
+                className={`fixed h-20 w-16 flex items-center justify-center z-50`}
+            >
+                <RxHamburgerMenu
+                    onClick={() => setIsHamBurgerActive((prev) => !prev)}
+                    style={{ height: '35px', width: '35px', borderRadius: '5px', backgroundColor: '#374151', color: 'white', padding: '5px' }}
+                />
+            </div>
+            <div
+                className={`fixed bg-[#1F2937] h-screen z-50 ${isHamBurgerActive ? '' : '-translate-x-full'} transition-all duration-300 `}
+            >
+                <div
+                    className={`w-16 h-screen`}
+                >
                     <div
-                        className={`group h-screen cursor-pointer fixed top-0 z-50 flex flex-col gap-4 py-5 transition-all duration-300 dark:bg-[#0e1421] md:flex ${isHoverActive ? "w-16 hover:w-64" : "w-64"
-                            }`}
+                        className={`h-20 w-full flex items-center justify-center bg-red-500`}
                     >
-                        <div
-                            className={`flex items-center justify-end gap-5 rounded-md`}
-                        >
-                            <GrClose
-                                onClick={() => setIsHamBurgerActive((prev) => !prev)}
-                                style={{ height: '35px', width: '35px', borderRadius: '5px', backgroundColor: '#374151', color: 'white', padding: '5px', marginRight: '14px' }}
-                            />
-                        </div>
+                        <AiOutlineClose
+                            onClick={() => setIsHamBurgerActive((prev) => !prev)}
+                            style={{ height: '2.5rem', width: '2.5rem', borderRadius: '5px', color: 'white', padding: '5px' }}
+                        />
+                    </div>
+
+                    <div
+                    >
                         <SidebarInnerContentComp />
                     </div>
-                )
-            }
-        </div >
+                </div>
+            </div >
+        </>
     )
 };
 
 export default Sidebar;
+
+

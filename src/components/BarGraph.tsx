@@ -27,12 +27,13 @@ const BarChart = () => {
 
     const logarithmicData = Object.values(barData).map((value) => {
         return Math.log(value);
+        // return (value);
     });
     const data = {
         labels: Object.keys(barData),
         datasets: [
             {
-                label: 'Data',
+                label: 'data',
                 data: logarithmicData,
                 backgroundColor: cssColor,
                 borderColor: 'rgba(75,192,192,1)',
