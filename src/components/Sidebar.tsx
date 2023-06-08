@@ -52,8 +52,8 @@ const Sidebar = () => {
     });
 
     const [isHoverActive, setIsHoverActive] = React.useState(false);
-    const [isSidebarActive, setIsSidebarActive] = useState(true);
-    const [isHamBurgerActive, setIsHamBurgerActive] = React.useState(true);
+    const [isSidebarActive, setIsSidebarActive] = useState(window.innerWidth > 425 ? true : false);
+    const [isHamBurgerActive, setIsHamBurgerActive] = React.useState(false);
 
     const handleIsHoverActive = () => {
         localStorage.setItem("isHoverActive", JSON.stringify(!isHoverActive));
